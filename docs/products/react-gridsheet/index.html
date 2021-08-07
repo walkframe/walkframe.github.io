@@ -406,13 +406,29 @@
 <li><p>Saving events are emitted by <cite>Ctrl + s</cite> or <cite>Command + s</cite>.</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">(matrix,</span> <span class="pre">cellsOption)</span> <span class="pre">=&gt;</span> <span class="pre">void</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(matrix,</span> <span class="pre">cellsOption,</span> <span class="pre">positions)</span> <span class="pre">=&gt;</span> <span class="pre">void</span></code></p>
+<ul>
+<li><p><cite>positions</cite> argument has 3 keys. Every values gets cell position indexes like <code class="docutils literal notranslate"><span class="pre">[Y</span> <span class="pre">as</span> <span class="pre">number,</span> <span class="pre">X</span> <span class="pre">as</span> <span class="pre">number]</span></code>.</p>
+<ul>
+<li><p>pointing: A pointing cell.</p></li>
+<li><p>selectingFrom: A cell selected (dragged) from. If no cells dragged, it will be <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">-1]</span></code>.</p></li>
+<li><p>selectingTo: A cell selected (dragged) to. If no cells dragged, it will be <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">-1]</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </dd>
 <dt class="field-even">options.onChange</dt>
 <dd class="field-even"><ul class="simple">
 <li><p>A callback function on <code class="docutils literal notranslate"><span class="pre">matrix</span></code> or <code class="docutils literal notranslate"><span class="pre">options.cells</span></code> changed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">(matrix,</span> <span class="pre">cellsOption)</span> <span class="pre">=&gt;</span> <span class="pre">void</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(matrix,</span> <span class="pre">cellsOption,</span> <span class="pre">positions)</span> <span class="pre">=&gt;</span> <span class="pre">void</span></code> (same as onSave)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">options.onSelect</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>A callback function on select or dragging cells.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(matrix,</span> <span class="pre">cellsOption,</span> <span class="pre">positions)</span> <span class="pre">=&gt;</span> <span class="pre">void</span></code> (same as onSave)</p></li>
 </ul>
 </dd>
 </dl>

@@ -246,10 +246,21 @@ options prop
 
     - Saving events are emitted by `Ctrl + s` or `Command + s`.
 
-  - ``(matrix, cellsOption) => void``
+  - ``(matrix, cellsOption, positions) => void``
+
+    - `positions` argument has 3 keys. Every values gets cell position indexes like ``[Y as number, X as number]``.
+
+      - pointing: A pointing cell.
+      - selectingFrom: A cell selected (dragged) from. If no cells dragged, it will be ``[-1, -1]``.
+      - selectingTo: A cell selected (dragged) to. If no cells dragged, it will be ``[-1, -1]``.
 
 
 :options.onChange:
 
   - A callback function on ``matrix`` or ``options.cells`` changed.
-  - ``(matrix, cellsOption) => void``
+  - ``(matrix, cellsOption, positions) => void`` (same as onSave)
+
+:options.onSelect:
+
+  - A callback function on select or dragging cells.
+  - ``(matrix, cellsOption, positions) => void`` (same as onSave)

@@ -297,9 +297,22 @@
 </dd>
 <dt class="field-even">options.renderers</dt>
 <dd class="field-even"><ul class="simple">
-<li><p>You can create a new Renderer inheriting <code class="docutils literal notranslate"><span class="pre">Renderer</span></code> class.</p>
+<li><p>You can create a custom Renderer inheriting <code class="docutils literal notranslate"><span class="pre">Renderer</span></code> class.</p>
 <ul>
 <li><p>It has to be registered here. The key identifies the renderer.</p></li>
+<li><p>You can override methods on the Renderer class.</p>
+<ul>
+<li><p>stringify: changes cell value to string when the cell editing and pasting. (from v0.5.7)</p></li>
+<li><p>string: renders cell value when type of the cell is <cite>string</cite>.</p></li>
+<li><p>bool: renders cell value when type of the cell is <cite>boolean</cite>.</p></li>
+<li><p>number: renders cell value when type of the cell is <cite>number</cite>.</p></li>
+<li><p>date: renders cell value when type of the cell is <cite>date</cite>.</p></li>
+<li><p>array: renders cell value when type of the cell is <cite>array</cite>.</p></li>
+<li><p>object: renders cell value when type of the cell is <cite>object</cite>.</p></li>
+<li><p>null: renders cell value when type of the cell is <cite>null</cite>.</p></li>
+<li><p>undefined: renders cell value when type of the cell is <cite>undefined</cite>.</p></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><p>To use the renderer, you have to specify the renderer’s identity to <code class="docutils literal notranslate"><span class="pre">options.cells[column].renderer</span></code>.</p></li>
@@ -314,6 +327,9 @@
 <span class="kr">class</span> <span class="nx">QuoteRenderer</span> <span class="kr">extends</span> <span class="nx">Renderer</span> <span class="p">{</span>
   <span class="nx">string</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="sb">`"</span><span class="si">${</span><span class="nx">value</span><span class="si">}</span><span class="sb">"`</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">stringify</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">""</span> <span class="o">+</span> <span class="nx">value</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 
@@ -339,9 +355,37 @@
 </dd>
 <dt class="field-odd">options.parsers</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>You can create a new Parser inheriting <code class="docutils literal notranslate"><span class="pre">Parser</span></code> class.</p>
+<li><p>You can create a custom Parser inheriting <code class="docutils literal notranslate"><span class="pre">Parser</span></code> class.</p>
 <ul>
 <li><p>It has to be registered here. The key identifies the parser.</p></li>
+<li><p>You can override methods on the Parser class.</p>
+<ul>
+<li><p>callback: receives parsed value and returns value that should be stored into the cell. (from v0.5.7)</p>
+<ul>
+<li><p>parsed value is passed to first argument.</p></li>
+<li><p>previous value is passed to second argument.</p></li>
+</ul>
+</li>
+<li><p>parse: parses inputted value.</p>
+<ul>
+<li><p>This calls methods in the order of the <cite>parseFunctions</cite>.</p></li>
+<li><p>This continues parsing until the parse succeeds.
+If parsing does not succeeded until the end, the inputted value will be the parsed value.</p>
+<ul>
+<li><p>parse success means not returning <code class="docutils literal notranslate"><span class="pre">undefined</span></code> or <code class="docutils literal notranslate"><span class="pre">null</span></code>.</p></li>
+</ul>
+</li>
+<li><p>This parses inputted value in the following order:</p>
+<ul>
+<li><p>number: parses it to number type.</p></li>
+<li><p>date: parses it to date type.</p></li>
+<li><p>bool: parses it to boolean type.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><p>To use the parser, you have to specify the parser’s identity to <code class="docutils literal notranslate"><span class="pre">options.cells[column].parser</span></code>.</p></li>
@@ -360,6 +404,10 @@
 
   <span class="nx">evaluate</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="nx">value</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">callback</span><span class="p">(</span><span class="nx">parsed</span><span class="o">:</span> <span class="nx">any</span><span class="p">,</span> <span class="nx">old</span><span class="o">:</span> <span class="nx">any</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="sb">`before: </span><span class="si">${</span><span class="nx">old</span><span class="si">}</span><span class="sb">, after: </span><span class="si">${</span><span class="nx">parsed</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">parsed</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 

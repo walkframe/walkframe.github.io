@@ -62,7 +62,7 @@ options prop
   - `default` (lowercase) field matches all rows, columns and cells.
 
     - You can set default height and width here.
-      
+
       - defaultHeight and defaultWidth has been dropped.
 
   - An upppercase letter field means a config for a column.
@@ -90,7 +90,7 @@ options prop
   Example:
 
   .. code-block:: javascript
-  
+
     cells: {
       default: {
         width: 100, // px
@@ -136,21 +136,32 @@ options prop
   - Whether `ENTER` key gets down and set the cell editing.
   - default: ``true``
 
-:options.cellLabel: 
+:options.cellLabel:
 
   - Whether cell labels (navigator) show.
   - default: ``true``
 
-:options.mode: 
+:options.mode:
 
   - color mode. It allows ``"light"`` or ``"dark"``.
   - default: ``"light"``
 
-:options.renderers: 
+:options.renderers:
 
-  - You can create a new Renderer inheriting ``Renderer`` class.
+  - You can create a custom Renderer inheriting ``Renderer`` class.
 
     - It has to be registered here. The key identifies the renderer.
+    - You can override methods on the Renderer class.
+
+      - stringify: changes cell value to string when the cell editing and pasting. (from v0.5.7)
+      - string: renders cell value when type of the cell is `string`.
+      - bool: renders cell value when type of the cell is `boolean`.
+      - number: renders cell value when type of the cell is `number`.
+      - date: renders cell value when type of the cell is `date`.
+      - array: renders cell value when type of the cell is `array`.
+      - object: renders cell value when type of the cell is `object`.
+      - null: renders cell value when type of the cell is `null`.
+      - undefined: renders cell value when type of the cell is `undefined`.
 
   - To use the renderer, you have to specify the renderer's identity to ``options.cells[column].renderer``.
   - default: ``{}``
@@ -166,6 +177,9 @@ options prop
     class QuoteRenderer extends Renderer {
       string(value) {
         return `"${value}"`;
+      }
+      stringify(value) {
+        return "" + value;
       }
     }
 
@@ -187,11 +201,31 @@ options prop
       />)
     }
 
-:options.parsers: 
+:options.parsers:
 
-  - You can create a new Parser inheriting ``Parser`` class.
+  - You can create a custom Parser inheriting ``Parser`` class.
 
     - It has to be registered here. The key identifies the parser.
+    - You can override methods on the Parser class.
+
+      - callback: receives parsed value and returns value that should be stored into the cell. (from v0.5.7)
+
+        - parsed value is passed to first argument.
+        - previous value is passed to second argument.
+
+      - parse: parses inputted value.
+
+        - This calls methods in the order of the `parseFunctions`.
+        - This continues parsing until the parse succeeds.
+          If parsing does not succeeded until the end, the inputted value will be the parsed value.
+
+          - parse success means not returning ``undefined`` or ``null``.
+
+        - This parses inputted value in the following order:
+
+          - number: parses it to number type.
+          - date: parses it to date type.
+          - bool: parses it to boolean type.
 
   - To use the parser, you have to specify the parser's identity to ``options.cells[column].parser``.
 
@@ -213,6 +247,10 @@ options prop
       evaluate(value) {
         return eval(value);
       }
+      callback(parsed: any, old: any) {
+        console.debug(`before: ${old}, after: ${parsed}`);
+        return parsed;
+      }
     }
 
     export default function App() {
@@ -233,14 +271,14 @@ options prop
       />)
     }
 
-:options.resize: 
+:options.resize:
 
   :both: allows resizing both directions.
   :vertical: allows resizing vertically.
   :horizontal: allows resizing horizontally.
   :none: does not allow resizing.
 
-:options.onSave: 
+:options.onSave:
 
   - A callback function on you saving.
 
